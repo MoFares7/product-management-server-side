@@ -16,5 +16,5 @@ Route::post('/login', [UserContoller::class, 'login']);
 Route::post('/logout', [UserContoller::class, 'logout']);
 
 Route::resource('products', ProductController::class);
-Route::post('/products/{product}/comments', [CommentController::class, 'store'])->middleware('auth:sanctum');
+Route::resource('products/{product}/comments', CommentController::class)->middleware('auth:sanctum');
 

@@ -14,7 +14,8 @@ class CommentController extends Controller
      */
     public function index()
     {
-        //
+        $comments = Comment::all();
+        return response()->json($comments);
     }
 
     /**
@@ -24,11 +25,6 @@ class CommentController extends Controller
     {
         //
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     */
 
 public function store(Request $request, Product $product)
 {
