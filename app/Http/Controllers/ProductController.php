@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Product;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
@@ -41,14 +42,14 @@ public function store(Request $request)
         'image' => 'image|mimes:jpeg,png,jpg,gif,svg|max:2048',
     ]);
 
-    $validatedData = $request->all(); // Initialize $validatedData with all request data
+    $validatedData = $request->all(); 
 
     if ($request->hasFile('image')) {
         $imagePath = $request->file('image')->store('products_images', 'public');
         $validatedData['image'] = $imagePath;
     }
 
-    // Make sure the 'name' field is set before attempting to create a new product
+    //! Make sure the 'name' field is set before attempting to create a new product
     if (!isset($validatedData['name'])) {
         return response()->json(['error' => 'Name field is required.'], 400);
     }
@@ -77,10 +78,8 @@ public function store(Request $request)
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     */public function update(Request $request, Product $product)
-{
+  public function update(Request $request, Product $product)
+  {
     $request->validate([
         'name' => 'required',
         'type' => 'required',
@@ -91,22 +90,20 @@ public function store(Request $request)
 
     $validatedData = $request->all();
 
-    // Handle image upload
     if ($request->hasFile('image')) {
-        // Delete the existing image file
+        //! Delete the existing image file
         if ($product->image) {
             Storage::disk('public')->delete($product->image);
         }
 
-        // Upload and store the new image file
+        //! Upload and store the new image file
         $imagePath = $request->file('image')->store('products_images', 'public');
         $validatedData['image'] = $imagePath;
     }
-
     try {
         $product->update($validatedData);
 
-        // Refresh the product instance to reflect the changes in the response
+        //! Refresh the product instance to reflect the changes in the response
         $product = $product->fresh();
 
         return response()->json(['message' => 'Product updated successfully', 'data' => $product]);
@@ -114,11 +111,6 @@ public function store(Request $request)
         return response()->json(['error' => 'Error updating product', 'message' => $e->getMessage()], 500);
     }
 }
-
-
-    /**
-     * Remove the specified resource from storage.
-     */
      public function destroy(Product $product)
     {
         try {
@@ -128,4 +120,7 @@ public function store(Request $request)
             return response()->json(['error' => 'Error deleting product', 'message' => $e->getMessage()], 500);
         }
     }
+    // public function addComment(Comment $comment){
+    //     $comment = $product->comments();
+    // }
 }
